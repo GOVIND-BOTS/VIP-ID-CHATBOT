@@ -171,4 +171,4 @@ async def alexastickerai(client: Client, message: Message):
     (filters.text | filters.sticker)
     & filters.private
     & ~filters.me
-   
+)
