@@ -167,9 +167,92 @@ async def alexastickerai(client: Client, message: Message):
                     )
 
 
+
 @client.on_message(
     (filters.text | filters.sticker)
     & filters.private
     & ~filters.me
 )
-    
+& filters.private
+    & ~filters.me
+    & ~filters.bot,
+)
+async def Vipprivate(client: Client, message: Message):
+
+   chatdb = MongoClient(MONGO_URL)
+   chatai = chatdb["Word"]["WordDb"]
+   if not message.reply_to_message: 
+       await client.send_chat_action(message.chat.id, "typing")
+       K = []  
+       is_chat = chatai.find({"word": message.text})                 
+       for x in is_chat:
+           K.append(x['text'])
+       hey = random.choice(K)
+       is_text = chatai.find_one({"text": hey})
+       Yo = is_text['check']
+       if Yo == "sticker":
+           await message.reply_sticker(f"{hey}")
+       if not Yo == "sticker":
+           await message.reply_text(f"{hey}")
+   if message.reply_to_message:            
+       getme = await client.get_me()
+       user_id = getme.id       
+       if message.reply_to_message.from_user.id == user_id:                    
+           await client.send_chat_action(message.chat.id, "typing")
+           K = []  
+           is_chat = chatai.find({"word": message.text})                 
+           for x in is_chat:
+               K.append(x['text'])
+           hey = random.choice(K)
+           is_text = chatai.find_one({"text": hey})
+           Yo = is_text['check']
+           if Yo == "sticker":
+               await message.reply_sticker(f"{hey}")
+           if not Yo == "sticker":
+               await message.reply_text(f"{hey}")
+                     
+@client.on_message(
+ (
+        filters.sticker
+        | filters.text
+    )
+    & filters.private
+    & ~filters.me
+    & ~filters.bot,
+)
+async def Vipprivatesticker(client: Client, message: Message):
+
+   chatdb = MongoClient(MONGO_URL)
+   chatai = chatdb["Word"]["WordDb"] 
+   if not message.reply_to_message:
+       await client.send_chat_action(message.chat.id, "typing")
+       K = []  
+       is_chat = chatai.find({"word": message.sticker.file_unique_id})                 
+       for x in is_chat:
+           K.append(x['text'])
+       hey = random.choice(K)
+       is_text = chatai.find_one({"text": hey})
+       Yo = is_text['check']
+       if Yo == "text":
+           await message.reply_text(f"{hey}")
+       if not Yo == "text":
+           await message.reply_sticker(f"{hey}")
+   if message.reply_to_message:            
+       getme = await client.get_me()
+       user_id = getme.id       
+       if message.reply_to_message.from_user.id == user_id:                    
+           await client.send_chat_action(message.chat.id, "typing")
+           K = []  
+           is_chat = chatai.find({"word": message.sticker.file_unique_id})                 
+           for x in is_chat:
+               K.append(x['text'])
+           hey = random.choice(K)
+           is_text = chatai.find_one({"text": hey})
+           Yo = is_text['check']
+           if Yo == "text":
+               await message.reply_text(f"{hey}")
+           if not Yo == "text":
+               await message.reply_sticker(f"{hey}")
+               
+
+client.run()
