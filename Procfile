@@ -1,1 +1,1 @@
-worker: python3 AlexaAi
+worker: python3 AlexaAi.py
